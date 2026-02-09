@@ -75,10 +75,12 @@ class BarangKeluarView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             return Response(
-                "pesan": "Barang keluar berhasil, stok berkurang",
-                "stok_sekarang": stok_baru
-            ),
-            status=status.HTTP_201_CREATED
+                {
+                    "pesan": "Barang keluar berhasil, stok berkurang",
+                    "stok_sekarang": stok_baru
+                },
+                status=status.HTTP_201_CREATED
+            )
         
         except Exception as e:
             return Response(
