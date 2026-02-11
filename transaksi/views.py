@@ -4,12 +4,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
+from akun.permissions import IsAdminOrStaff
 from .models import BarangMasuk, BarangKeluar
 from .serializers import BarangMasukSerializer, BarangKeluarSerializer
 from master.models import Barang
 
 class BarangMasukView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrStaff]
 
     def post(self, request):
         try:
@@ -47,7 +48,7 @@ class BarangMasukView(APIView):
         
 
 class BarangKeluarView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrStaff]
 
     def post(self, request):
         
