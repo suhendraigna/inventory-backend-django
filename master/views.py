@@ -1,11 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Kategori, Supplier, Barang
 from .serializers import KategoriSerializer, SupplierSerializer, BarangSerializer
 
 class KategoriView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         data = Kategori.objects.all()
         serializer = KategoriSerializer(data, many=True)
@@ -69,6 +72,8 @@ class KategoriView(APIView):
         )
 
 class SupplierView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         data = Supplier.objects.all()
         serializer = SupplierSerializer(data, many=True)
@@ -89,6 +94,8 @@ class SupplierView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class BarangView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         data = Barang.objects.all()
         serializer = BarangSerializer(data, many=True)
