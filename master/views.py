@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
+from config.response import sukses, gagal
 from akun.permissions import IsAdmin
 from .models import Kategori, Supplier, Barang
 from .serializers import KategoriSerializer, SupplierSerializer, BarangSerializer
@@ -20,36 +21,21 @@ class KategoriView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(
-                {
-                    "pesan": "Kategori berhasil ditambahkan"
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return sukses("Kategori berhasil ditambahkan")
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return gagal("Data kategori tidak valid", 400)
 
     def put(self, request, id):
         try:
             kategori = Kategori.objects.get(id=id)
         except Kategori.DoesNotExist:
-            return Response(
-                {
-                    "pesan": "Kategori tidak ditemukan"
-                },
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return gagal("Kategori tidak ditemukan", 404)
         
         serializer = KategoriSerializer(kategori, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
-            return Response(
-                {
-                    "pesan": "Kategori berhasil diupdate"
-                },
-                status=status.HTTP_200_OK
-            )
+            return sukses("Kategori berhasil diupdate")
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -57,20 +43,10 @@ class KategoriView(APIView):
         try:
             kategori = Kategori.objects.get(id=id)
         except Kategori.DoesNotExist:
-            return Response(
-                {
-                    "pesan": "Kategori tidak ditemukan"
-                },
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return gagal("Kategori tidak ditemukan", 404)
         
         kategori.delete()
-        return Response(
-            {
-                "pesan": "Kategori berhasil dihapus"
-            },
-            status=status.HTTP_200_OK
-        )
+        return sukses("Kategori berhasil dihapus")
 
 class SupplierView(APIView):
     permission_classes = [IsAdmin]
@@ -85,12 +61,7 @@ class SupplierView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(
-                {
-                    "pesan": "Supplier berhasil ditambahkan"
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return sukses("Supplier berhasil ditambahkan")
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -107,12 +78,7 @@ class BarangView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(
-                {
-                    "pesan": "Barang berhasil ditambahkan"
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return sukses("Barang berhasil ditambahkan")
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -120,23 +86,13 @@ class BarangView(APIView):
         try:
             barang = Barang.objects.get(id=id)
         except Barang.DoesNotExist:
-            return Response(
-                {
-                    "pesan": "Barang tidak ditemukan"
-                },
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return gagal("Barang tidak ditemukan", 404)
         
         serializer = BarangSerializer(barang, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
-            return Response(
-                {
-                    "pesan": "Barang berhasil diupdate"
-                },
-                status=status.HTTP_200_OK
-            )
+            return sukses("Barang berhasil diupdate")
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -144,17 +100,7 @@ class BarangView(APIView):
         try:
             barang = Barang.objects.get(id=id)
         except Barang.DoesNotExist:
-            return Response(
-                {
-                    "pesan": "Barang tidak ditemukan"
-                },
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return gagal("Barang tidak ditemukan", 404)
         
         barang.delete()
-        return Response(
-            {
-                "pesan": "Barang berhasil dihapus"
-            },
-            status=status.HTTP_200_OK
-        )
+        return sukses("Barang berhasil dihapus")

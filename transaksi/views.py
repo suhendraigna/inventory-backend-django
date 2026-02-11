@@ -9,21 +9,20 @@ from .models import BarangMasuk, BarangKeluar
 from .serializers import BarangMasukSerializer, BarangKeluarSerializer
 from master.models import Barang
 
+
+def tambah_stok(barang, jumlah):
+    barang.stok += jumlah
+    barang.save()
+
 class BarangMasukView(APIView):
     permission_classes = [IsAdminOrStaff]
 
     def post(self, request):
         try:
-            barang_id = request.data.get('barang')
+            barang = get_object_or_404(Barang, id=request.data.get('barang'))
             jumlah = int(request.data.get('jumlah'))
-        
-            barang = get_object_or_404(Barang, id=barang_id)
 
-            stok_lama = barang.stok
-            stok_baru = stok_lama + jumlah
-
-            barang.stok = stok_baru
-            barang.save()
+            tambah_stok(barang, jumlah)
 
             serializer = BarangMasukSerializer(data=request.data)
             if serializer.id_valid():

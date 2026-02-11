@@ -4,6 +4,7 @@ from rest_framework import status
 from django.contrib.auth.hashers import check_password
 from rest_framework_simplejwt.tokens import AccessToken
 
+from config.response import sukses, gagal
 from .models import Pegawai
 
 class LoginView(APIView):
@@ -13,30 +14,15 @@ class LoginView(APIView):
         password = request.data.get('password')
 
         if not email or not password:
-            return Response(
-                {
-                    "pesan": "Email dan password harus diisi"
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return gagal("Email dan password harus diisi", 400)
 
         try:
             pegawai = Pegawai.objects.get(email=email)
         except Pegawai.DoesNotExist:
-            return Response(
-                {
-                    "pesan": "Email tidak terdaftar"
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return gagal("Email tidak terdaftar", 400)
 
         if not check_password(password, pegawai.password):
-            return Response(
-                {
-                    "pesan": "Password salah"
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return gagal("Password salah", 400)
 
         token = AccessToken()
 
@@ -44,8 +30,8 @@ class LoginView(APIView):
         token['nama_lengkap'] = pegawai.nama_lengkap
         token['role'] = pegawai.role
 
-        return Response({
+        return sukses("Login berhasil", {
             "access": str(token),
             "nama_lengkap": pegawai.nama_lengkap,
             "role": pegawai.role
-        }, status=status.HTTP_200_OK)
+        })
